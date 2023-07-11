@@ -8,8 +8,11 @@
         <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
         <outputRelativeToContentRoot value="true" />
         <module name="Order" />
-        <module name="Pharmacy" />
+        <module name="EurekaServer" />
         <module name="User" />
+        <module name="ConfigServer" />
+        <module name="Pharmacy" />
+        <module name="ApiGateway" />
       </profile>
     </annotationProcessing>
     <bytecodeTargetLevel>
