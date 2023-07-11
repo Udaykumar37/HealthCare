@@ -1,0 +1,23 @@
+server:
+  port: 8020
+#  servlet:
+#    context-path: /pharmacy
+
+
+spring:
+  application:
+    name: Pharmacy
+#  datasource:
+#    url: jdbc:mysql://localhost:3306/healthcare
+#    username: root
+#    password: admin
+#  jpa:
+#    database: mysql
+#    properties:
+#      hibernate:
+#        dialect: org.hibernate.dialect.MySQL8Dialect
+#    hibernate:
+#      ddl-auto: none
+#    show-sql: true
+#  config:
+#    import: configserver:http://localhost:8100
