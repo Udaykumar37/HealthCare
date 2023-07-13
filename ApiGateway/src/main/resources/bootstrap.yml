@@ -1,18 +1,3 @@
-
-server:
-  port: 8100
-
-spring:
-  application:
-    name: Config-server
-  cloud:
-    config:
-      server:
-        git:
-          uri: https://github.com/Udaykumar37/HealthCare-Config
-          default-label: main
-        clone-on-start: true
-
 eureka:
   client:
     service-url:
@@ -22,3 +7,11 @@ eureka:
   instance:
     instance-id: ${spring.cloud.client.hostname}:${spring.application.name}:${spring.application.instance_id:${random.value}}
     # When multiple instances are used, we use port number 0. In such case the above property creates random instance id and helps eureka server in identifying multiple instances
+
+spring:
+  cloud:
+    config:
+      discovery:
+        enabled: true #Use Discovery server to find ConfigServer
+        service-id: Config-server #Config server application name
+      fail-fast: true # Fail at startup  if unable to load properties

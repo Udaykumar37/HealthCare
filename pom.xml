@@ -13,8 +13,8 @@
         <module>User</module>
         <module>Order</module>
         <module>EurekaServer</module>
-        <module>ApiGateway</module>
         <module>ConfigServer</module>
+        <module>ApiGateway</module>
     </modules>
 
     <name>HealthCareServices</name>

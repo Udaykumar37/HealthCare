@@ -1,0 +1,45 @@
+server:
+  port: 8200
+
+#
+#logging:
+#  level:
+#    root: INFO
+#    org:
+#      springframework:
+#        cloud:
+#          gateway: TRACE
+
+spring:
+  application:
+    name: ApiGateway
+#  cloud:
+#    gateway:
+#      routes:
+#        - id: user-service-route
+#          uri: lb://USER
+#          predicates:
+#            - Path=/user/**
+#        - id: pharmacy-service-route
+#          uri: lb://PHARMACY
+#          predicates:
+#            - Path=/pharmacy/**
+#        - id: order-service-route
+#          uri: lb://ORDER  # lb refers to load balanced
+#          predicates:
+#            - Path=/order/**
+#        - id: eureka-service-route
+#          uri: http://localhost:8050
+#          predicates:
+#            - Path=/eureka/web
+#          filters:
+#            - SetPath=/
+#        - id: eureka-static-route # This route is to give access to eureka dashboard css files
+#          uri: http://localhost:8050
+#          predicates:
+#            - Path=/eureka/**
+
+
+
+
+
