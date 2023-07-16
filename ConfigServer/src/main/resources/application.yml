@@ -12,6 +12,11 @@ spring:
           uri: https://github.com/Udaykumar37/HealthCare-Config
           default-label: main
         clone-on-start: true
+#  zipkin:
+#    baseUrl: http://localhost:9411
+#  sleuth:
+#    sampler:
+#      probability: 1.0
 
 eureka:
   client:

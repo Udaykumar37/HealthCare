@@ -7,6 +7,8 @@ import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.healthcare.order.properties.ClientProperties;
 import org.healthcare.order.service.dto.UserDetails;
+import org.springframework.cloud.sleuth.Span;
+import org.springframework.cloud.sleuth.Tracer;
 import org.springframework.stereotype.Component;
 import org.springframework.web.client.RestTemplate;
 
@@ -19,6 +21,7 @@ public class UserClient {
 
   private final RestTemplate restTemplate;
   private final ClientProperties clientProperties;
+  private final Tracer tracer;
 
   public boolean isValidUser(Long userId) {
     String baseUrl = clientProperties.getUserClient().getBaseUrl();
@@ -31,10 +34,15 @@ public class UserClient {
   @TimeLimiter(name = "userService")
   @Retry(name = "userService")
   public CompletableFuture<UserDetails> getUserDetailsById(Long userId) {
-    String baseUrl = clientProperties.getUserClient().getBaseUrl();
-    String completeUrl = baseUrl + "/user/" + userId;
-    return CompletableFuture.supplyAsync(
-        () -> restTemplate.getForObject(completeUrl, UserDetails.class));
+    Span userServiceLookup = tracer.nextSpan().name("userServiceLookup");
+    try (Tracer.SpanInScope spanInScope = tracer.withSpan(userServiceLookup.start())) {
+      String baseUrl = clientProperties.getUserClient().getBaseUrl();
+      String completeUrl = baseUrl + "/user/" + userId;
+      return CompletableFuture.supplyAsync(
+          () -> restTemplate.getForObject(completeUrl, UserDetails.class));
+    } finally {
+      userServiceLookup.end();
+    }
   }
 
   public CompletableFuture<UserDetails> fallbackMethodGetUserDetailsById(Long userId,

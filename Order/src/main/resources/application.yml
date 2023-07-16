@@ -21,6 +21,11 @@ spring:
 #    show-sql: true
 #  config:
 #    import: configserver:http://localhost:8100
+#  zipkin:
+#    baseUrl: http://localhost:9411
+#  sleuth:
+#    sampler:
+#      probability: 1.0
 
 
 #external-client:
