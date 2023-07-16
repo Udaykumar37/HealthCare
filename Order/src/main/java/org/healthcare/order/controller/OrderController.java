@@ -10,6 +10,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
 import java.util.Optional;
 
 @RestController
@@ -37,6 +38,14 @@ public class OrderController {
     OrderDetails orderDetails = orderService.getOrderDetails(id);
     log.info("Exited getOrderDetails={}", id);
     return new ResponseEntity<>(orderDetails, HttpStatus.OK);
+  }
+
+  @GetMapping
+  public ResponseEntity<?> getAllOrders() {
+    log.info("Entered getAllOrders");
+    List<Order> orderList = orderService.getAllOrders();
+    log.info("Exited getAllOrders");
+    return new ResponseEntity<>(orderList, HttpStatus.OK);
   }
 
   @PostMapping

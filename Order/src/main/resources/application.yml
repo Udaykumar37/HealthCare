@@ -28,3 +28,69 @@ spring:
 #    baseUrl: http://USER/user
 #  pharmacyClient:
 #    baseUrl: http://PHARMACY/pharmacy
+
+#
+## TO show circuit breaker health metrics provided by application
+#management:
+#  health:
+#    circuitbreakers:
+#      enabled: true
+#  endpoints:
+#    web:
+#      exposure:
+#        include: "*" # Show all types of endpoints in actuator instead of only health metrics endpoints which are by default
+#  endpoint:
+#    health:
+#      show-details: always # show complete health details of pour application
+
+
+# Resilience4j Notes:
+# To make Retry configuration work along with timeLimiter and circuit breaker, we need to change aspectOrder
+# The default Resilience4j Aspects order is the following:
+# Retry ( CircuitBreaker ( RateLimiter ( TimeLimiter ( Bulkhead ( Function ) ) ) ) )
+# so Retry is applied at the end (if needed).
+# As CircuitBreaker has a fallback, so it never throws an exception, so Retry never sees a failed invocation to retry
+# So, Remove the Retry fallback, and change the aspect order so CircuitBreaker does its work after Retry.
+# Ref: https://stackoverflow.com/questions/71457925/resiliency4j-circuit-breaker-with-retry-configuration-not-working
+#      https://resilience4j.readme.io/docs/getting-started-3#aspect-order
+#resilience4j:
+#  circuitbreaker:
+#    circuit-breaker-aspect-order: 1
+#    instances:
+#      userService:
+#        registerHealthIndicator: true
+#        event-consumer-buffer-size: 10
+#        slidingWindowType: COUNT_BASED
+#        slidingWindowSize: 5
+#        failureRateThreshold: 50
+#        waitDurationInOpenState: 5s
+#        permittedNumberOfCallsInHalfOpenState: 3
+#        automaticTransitionFromOpenToHalfOpenEnabled: true
+#      pharmacyService:
+#        registerHealthIndicator: true
+#        event-consumer-buffer-size: 10
+#        slidingWindowType: COUNT_BASED
+#        slidingWindowSize: 5
+#        failureRateThreshold: 50
+#        waitDurationInOpenState: 5s
+#        permittedNumberOfCallsInHalfOpenState: 3
+#        automaticTransitionFromOpenToHalfOpenEnabled: true
+#  timelimiter:
+#    time-limiter-aspect-order: 3
+#    instances:
+#      userService:
+#        timeoutDuration: 3s
+#      pharmacyService:
+#        timeoutDuration: 3s
+#  retry:
+#    retry-aspect-order: 2
+#    instances:
+#      userService:
+#        maxAttempts: 3
+#        waitDuration: 5s
+#      pharmacyService:
+#        maxAttempts: 2
+#        waitDuration: 5s
+#        retryExceptions: java.lang.Exception
+
+
