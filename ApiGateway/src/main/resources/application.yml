@@ -38,6 +38,11 @@ spring:
 #          uri: http://localhost:8050
 #          predicates:
 #            - Path=/eureka/**
+#  zipkin:
+#    baseUrl: http://localhost:9411
+#  sleuth:
+#    sampler:
+#      probability: 1.0
 
 
 

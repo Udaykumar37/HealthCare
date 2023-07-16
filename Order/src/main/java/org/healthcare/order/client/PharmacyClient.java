@@ -7,6 +7,8 @@ import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.healthcare.order.properties.ClientProperties;
 import org.healthcare.order.service.dto.MedicineDetails;
+import org.springframework.cloud.sleuth.Span;
+import org.springframework.cloud.sleuth.Tracer;
 import org.springframework.stereotype.Component;
 import org.springframework.web.client.RestTemplate;
 
@@ -19,6 +21,7 @@ public class PharmacyClient {
 
   private final RestTemplate restTemplate;
   private final ClientProperties clientProperties;
+  private final Tracer tracer;
 
 
   public boolean isValidMedicine(Long medicineId) {
@@ -32,10 +35,15 @@ public class PharmacyClient {
   @TimeLimiter(name = "pharmacyService")
   @Retry(name = "pharmacyService")
   public CompletableFuture<MedicineDetails> getMedicineDetailsById(Long medicineId) {
-    String baseUrl = clientProperties.getPharmacyClient().getBaseUrl();
-    String completeUrl = baseUrl + "/medicine/" + medicineId;
-    return CompletableFuture.supplyAsync(
-        () -> restTemplate.getForObject(completeUrl, MedicineDetails.class));
+    Span pharmacyServiceLookup = tracer.nextSpan().name("pharmacyServiceLookup");
+    try (Tracer.SpanInScope spanInScope = tracer.withSpan(pharmacyServiceLookup.start())) {
+      String baseUrl = clientProperties.getPharmacyClient().getBaseUrl();
+      String completeUrl = baseUrl + "/medicine/" + medicineId;
+      return CompletableFuture.supplyAsync(
+          () -> restTemplate.getForObject(completeUrl, MedicineDetails.class));
+    } finally {
+      pharmacyServiceLookup.end();
+    }
   }
 
   public CompletableFuture<MedicineDetails> fallbackMethodGetMedicineDetailsById(Long medicineId,
